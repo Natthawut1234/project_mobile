@@ -1,13 +1,10 @@
-// add_menu_screen.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:project/model/menu_item.dart';
+import 'package:project/provider/list_menu.dart';
 
 class AddMenuScreen extends StatefulWidget {
-  final Function(MenuItem) onAddMenu;
-
-  AddMenuScreen({required this.onAddMenu});
-
   @override
   _AddMenuScreenState createState() => _AddMenuScreenState();
 }
@@ -18,6 +15,9 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   final _imageController = TextEditingController();
   String? _imageUrl;
   bool _isImageValid = true;
+
+  // ฟังก์ชั่นเช็คความถูกต้องของข้อมูล
+  final formKey = GlobalKey<FormState>();
 
   void _saveMenu() {
     final name = _nameController.text;
@@ -34,7 +34,9 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
       image: image,
     );
 
-    widget.onAddMenu(newMenuItem);
+    // ✅ ใช้ Provider แทน Callback
+    Provider.of<ListMenu>(context, listen: false).addMenuItem(newMenuItem);
+
     Navigator.pop(context);
   }
 
@@ -55,23 +57,49 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
+        child: Form(
+          key: formKey,
+          child: Column(children: [
+            TextFormField(
               controller: _nameController,
               decoration: InputDecoration(labelText: 'ชื่อเมนู'),
+              autofocus: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'กรุณากรอกชื่อเมนู';
+                }
+                return null;
+              },
             ),
-            TextField(
+            TextFormField(
               controller: _priceController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: 'ราคา'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'กรุณากรอกราคา';
+                }
+                if (int.tryParse(value) == null) {
+                  return 'กรุณากรอกตัวเลขเท่านั้น';
+                }
+                if (int.tryParse(value)! <= 0) {
+                  return 'กรุณากรอกราคามากกว่า 0';
+                }
+                return null;
+              },
             ),
-            TextField(
+            TextFormField(
               controller: _imageController,
               decoration: InputDecoration(labelText: 'URL รูปภาพ'),
               onChanged: _validateImageUrl,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'กรุณากรอก URL รูปภาพ';
+                }
+                return null;
+              },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // ช่องแสดงตัวอย่างรูปภาพ
             _imageUrl != null && _isImageValid
                 ? Container(
@@ -97,14 +125,19 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: Colors.grey),
                     ),
-                    child: Center(child: Text('กรุณากรอก URL รูปภาพ')),
+                    child: const Center(child: Text('กรุณากรอก URL รูปภาพ')),
                   ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _saveMenu,
-              child: Text('บันทึกเมนู'),
+              onPressed: () {
+                // ถ้าข้อมูลถูกต้อง
+                if (formKey.currentState!.validate()) {
+                  _saveMenu();
+                }
+              },
+              child: const Text('บันทึกเมนู'),
             ),
-          ],
+          ]),
         ),
       ),
     );

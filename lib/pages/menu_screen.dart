@@ -1,66 +1,198 @@
+//โค้ดอยู่ด้านล่าง
+
+// import 'package:flutter/material.dart';
+// import 'package:project/pages/payment_screen.dart';
+// import '../model/menu_item.dart';
+
+// class MenuScreen extends StatefulWidget {
+//   const MenuScreen({Key? key}) : super(key: key);
+
+//   @override
+//   _MenuScreenState createState() => _MenuScreenState();
+// }
+
+// class _MenuScreenState extends State<MenuScreen> {
+//   // รายการเมนูทั้งหมด
+//   List<MenuItem> menuItems = [
+//     MenuItem(
+//       name: 'กาแฟดำ',
+//       price: 45,
+//       image: 'https://mpics.mgronline.com/pics/Images/563000011136201.JPEG',
+//     ),
+//     MenuItem(
+//       name: 'ลาเต้',
+//       price: 50,
+//       image:
+//           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQog4pvn467fHusxUe22IwerOwxcveQXr8taA&s',
+//     ),
+//     MenuItem(
+//       name: 'ชาเขียว',
+//       price: 55,
+//       image:
+//           'https://imgs.search.brave.com/xKpv0QheuC2832rMozPVq0lCtwLdbZtefXhgrh-VuZI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZS5iYW5na29rYml6/bmV3cy5jb20vdXBs/b2Fkcy9pbWFnZXMv/Y29udGVudHMvdzEw/MjQvMjAyNS8wMS9H/QmZYSHRPd3hRU0dX/WE5ucHNDMi53ZWJw/P3gtaW1hZ2UtcHJv/Y2Vzcz1zdHlsZS9s/Zy13ZWJw',
+//     ),
+//     MenuItem(
+//       name: 'ชานมไข่มุก',
+//       price: 65,
+//       image:
+//           'https://imgs.search.brave.com/-EMw3vieWjkO18z96KI8TbF7dMgfYkSCxZsDh4kgoIk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bWl0cnBob2xzdWdh/ci5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjIvMDgvJUUw/JUI4JUEzJUUwJUI4/JUFBJUUwJUI4JThB/JUUwJUI4JUIyJUUw/JUI4JTk1JUUwJUI4/JUI0JUUwJUI5JTgx/JUUwJUI4JUE1JUUw/JUI4JUIwJUUwJUI4/JTgxJUUwJUI4JUIy/JUUwJUI4JUEzJUUw/JUI5JTgzJUUwJUI4/JThBJUUwJUI5JTg5/JUUwJUI4JUE3JUUw/JUI4JUIxJUUwJUI4/JTk1JUUwJUI4JTk2/JUUwJUI4JUI4JUUw/JUI4JTk0JUUwJUI4/JUI0JUUwJUI5JTgx/JUUwJUI4JUE1JUUw/JUI4JUI0JUUw/JUI4JUIyJUUw/JUI4JUIxJUUwJUI4/JUE2JUUwJUI5JTk5/JUUwJUI4JThBJUUwJUI4/JUFCJUUwJUI4JUI1/JUUwJUI5JTg4',
+//     ),
+//   ];
+
+//   List<MenuItem> selectedItems = [];
+
+//   void addItem(MenuItem item) {
+//     setState(() {
+//       selectedItems.add(item);
+//     });
+//   }
+
+//   void removeItem(int index) {
+//     setState(() {
+//       selectedItems.removeAt(index);
+//     });
+//   }
+
+//   int getTotalPrice() {
+//     return selectedItems.fold(
+//         0, (sum, item) => sum + item.price); // คำนวณราคาจากรายการ selectedItems
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Row(
+//         children: [
+//           Expanded(
+//             flex: 2,
+//             child: GridView.builder(
+//               padding: EdgeInsets.all(8.0),
+//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                 crossAxisCount: 3,
+//                 childAspectRatio: 1.2,
+//               ),
+//               itemCount: menuItems.length,
+//               itemBuilder: (context, index) {
+//                 return Card(
+//                   shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(10)),
+//                   child: InkWell(
+//                     onTap: () => addItem(menuItems[index]),
+//                     child: Column(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: [
+//                         Expanded(
+//                           child: ClipRRect(
+//                             borderRadius:
+//                                 BorderRadius.vertical(top: Radius.circular(10)),
+//                             child: Image.network(
+//                               menuItems[index].image,
+//                               width: double.infinity,
+//                               fit: BoxFit.cover,
+//                             ),
+//                           ),
+//                         ),
+//                         Padding(
+//                           padding: EdgeInsets.all(8.0),
+//                           child: Column(
+//                             children: [
+//                               Text(menuItems[index].name,
+//                                   style: TextStyle(
+//                                       fontSize: 18,
+//                                       fontWeight: FontWeight.bold)),
+//                               SizedBox(height: 4),
+//                               Text('${menuItems[index].price} บาท',
+//                                   style: TextStyle(
+//                                       fontSize: 16, color: Colors.grey)),
+//                             ],
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//           Expanded(
+//             flex: 1,
+//             child: Container(
+//               color: Colors.grey[200],
+//               padding: EdgeInsets.all(8.0),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text('รายการที่เลือก',
+//                       style:
+//                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+//                   Expanded(
+//                     child: ListView.builder(
+//                       itemCount: selectedItems.length,
+//                       itemBuilder: (context, index) {
+//                         return ListTile(
+//                           leading: Image.network(selectedItems[index].image,
+//                               width: 40, height: 40, fit: BoxFit.cover),
+//                           title: Text(selectedItems[index].name),
+//                           trailing: IconButton(
+//                             icon: Icon(Icons.remove_circle, color: Colors.red),
+//                             onPressed: () => removeItem(index),
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                   Divider(),
+//                   Text('ราคารวม: ${getTotalPrice()} บาท',
+//                       style:
+//                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+//                   SizedBox(height: 10),
+//                   ElevatedButton(
+//                     style:
+//                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
+//                     onPressed: _navigateToPaymentScreen,
+//                     child: Text('ชำระเงิน',
+//                         style: TextStyle(fontSize: 18, color: Colors.white)),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   void _navigateToPaymentScreen() {
+//     // Get the total price of selected items
+//     int totalPrice = getTotalPrice(); // คำนวณราคาจาก selectedItems
+
+//     // Navigate to the payment screen and pass the totalPrice
+//     Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (context) => PaymentQRCodeScreen(
+//             totalAmount: totalPrice.toDouble()), // ส่ง totalPrice
+//       ),
+//     );
+//   }
+// }
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:project/pages/payment_screen.dart';
+import '../provider/list_menu.dart';
 import '../model/menu_item.dart';
 
-class MenuScreen extends StatefulWidget {
+class MenuScreen extends StatelessWidget {
   const MenuScreen({Key? key}) : super(key: key);
 
   @override
-  _MenuScreenState createState() => _MenuScreenState();
-}
-
-class _MenuScreenState extends State<MenuScreen> {
-  // รายการเมนูทั้งหมด
-  List<MenuItem> menuItems = [
-    MenuItem(
-      name: 'กาแฟดำ',
-      price: 45,
-      image: 'https://mpics.mgronline.com/pics/Images/563000011136201.JPEG',
-    ),
-    MenuItem(
-      name: 'ลาเต้',
-      price: 50,
-      image:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQog4pvn467fHusxUe22IwerOwxcveQXr8taA&s',
-    ),
-    MenuItem(
-      name: 'ชาเขียว',
-      price: 55,
-      image:
-          'https://imgs.search.brave.com/xKpv0QheuC2832rMozPVq0lCtwLdbZtefXhgrh-VuZI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZS5iYW5na29rYml6/bmV3cy5jb20vdXBs/b2Fkcy9pbWFnZXMv/Y29udGVudHMvdzEw/MjQvMjAyNS8wMS9H/QmZYSHRPd3hRU0dX/WE5ucHNDMi53ZWJw/P3gtaW1hZ2UtcHJv/Y2Vzcz1zdHlsZS9s/Zy13ZWJw',
-    ),
-    MenuItem(
-      name: 'ชานมไข่มุก',
-      price: 65,
-      image:
-          'https://imgs.search.brave.com/-EMw3vieWjkO18z96KI8TbF7dMgfYkSCxZsDh4kgoIk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bWl0cnBob2xzdWdh/ci5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjIvMDgvJUUw/JUI4JUEzJUUwJUI4/JUFBJUUwJUI4JThB/JUUwJUI4JUIyJUUw/JUI4JTk1JUUwJUI4/JUI0JUUwJUI5JTgx/JUUwJUI4JUE1JUUw/JUI4JUIwJUUwJUI4/JTgxJUUwJUI4JUIy/JUUwJUI4JUEzJUUw/JUI5JTgzJUUwJUI4/JThBJUUwJUI5JTg5/JUUwJUI4JUE3JUUw/JUI4JUIxJUUwJUI4/JTk1JUUwJUI4JTk2/JUUwJUI4JUI4JUUw/JUI4JTk0JUUwJUI4/JUI0JUUwJUI5JTgx/JUUwJUI4JUE1JUUw/JUI4JUI0JUUw/JUI4JUIyJUUw/JUI4JUIxJUUwJUI4/JUE2JUUwJUI5JTk5/JUUwJUI4JThBJUUwJUI4/JUFCJUUwJUI4JUI1/JUUwJUI5JTg4',
-    ),
-  ];
-
-  List<MenuItem> selectedItems = [];
-
-  void addItem(MenuItem item) {
-    setState(() {
-      selectedItems.add(item);
-    });
-  }
-
-  void removeItem(int index) {
-    setState(() {
-      selectedItems.removeAt(index);
-    });
-  }
-
-  int getTotalPrice() {
-    return selectedItems.fold(
-        0, (sum, item) => sum + item.price); // คำนวณราคาจากรายการ selectedItems
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final listMenu = Provider.of<ListMenu>(context);
+
     return Scaffold(
       body: Row(
         children: [
+          // 🔹 เมนูอาหาร (GridView)
           Expanded(
             flex: 2,
             child: GridView.builder(
@@ -69,13 +201,16 @@ class _MenuScreenState extends State<MenuScreen> {
                 crossAxisCount: 3,
                 childAspectRatio: 1.2,
               ),
-              itemCount: menuItems.length,
+              itemCount: listMenu.menuItems.length,
               itemBuilder: (context, index) {
+                final item = listMenu.menuItems[index];
+
                 return Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   child: InkWell(
-                    onTap: () => addItem(menuItems[index]),
+                    onTap: () =>
+                        listMenu.addItem(item), // ✅ ใช้ addItem จาก Provider
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -84,7 +219,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             borderRadius:
                                 BorderRadius.vertical(top: Radius.circular(10)),
                             child: Image.network(
-                              menuItems[index].image,
+                              item.image,
                               width: double.infinity,
                               fit: BoxFit.cover,
                             ),
@@ -94,12 +229,12 @@ class _MenuScreenState extends State<MenuScreen> {
                           padding: EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              Text(menuItems[index].name,
+                              Text(item.name,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold)),
                               SizedBox(height: 4),
-                              Text('${menuItems[index].price} บาท',
+                              Text('${item.price} บาท',
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.grey)),
                             ],
@@ -112,6 +247,8 @@ class _MenuScreenState extends State<MenuScreen> {
               },
             ),
           ),
+
+          // 🔹 ตะกร้าสินค้า
           Expanded(
             flex: 1,
             child: Container(
@@ -123,31 +260,66 @@ class _MenuScreenState extends State<MenuScreen> {
                   Text('รายการที่เลือก',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+
+                  // ✅ ใช้ Consumer เพื่อให้ UI อัปเดตเมื่อ selectedItems เปลี่ยน
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: selectedItems.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Image.network(selectedItems[index].image,
-                              width: 40, height: 40, fit: BoxFit.cover),
-                          title: Text(selectedItems[index].name),
-                          trailing: IconButton(
-                            icon: Icon(Icons.remove_circle, color: Colors.red),
-                            onPressed: () => removeItem(index),
-                          ),
+                    child: Consumer<ListMenu>(
+                      builder: (context, listMenu, child) {
+                        return ListView.builder(
+                          itemCount: listMenu.selectedItems.length,
+                          itemBuilder: (context, index) {
+                            final selectedItem = listMenu.selectedItems[index];
+
+                            return ListTile(
+                              leading: Image.network(
+                                selectedItem.image,
+                                width: 40,
+                                height: 40,
+                                fit: BoxFit.cover,
+                              ),
+                              title: Text(selectedItem.name),
+                              //เพิ่มราคาต่อชิ้น
+                              subtitle: Text('ราคา: ${selectedItem.price} บาท'),
+                              trailing: IconButton(
+                                icon: Icon(Icons.remove_circle,
+                                    color: Colors.red),
+                                onPressed: () => listMenu.removeItem(
+                                    index), // ✅ ใช้ removeItem จาก Provider
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
                   ),
+
                   Divider(),
-                  Text('ราคารวม: ${getTotalPrice()} บาท',
+
+                  // ✅ แสดงจำนวนรายการที่เลือก
+                  Text(
+                      'รายการที่เลือก: ${listMenu.selectedItems.length} รายการ',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
+
+                  // ✅ แสดงราคารวม
+                  Consumer<ListMenu>(
+                    builder: (context, listMenu, child) {
+                      return Text(
+                        'ราคารวม: ${listMenu.getTotalPrice()} บาท',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 10),
+
+                  // ✅ ปุ่มชำระเงิน
                   ElevatedButton(
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    onPressed: _navigateToPaymentScreen,
+                    onPressed: () => _navigateToPaymentScreen(context),
                     child: Text('ชำระเงิน',
                         style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
@@ -160,16 +332,17 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  void _navigateToPaymentScreen() {
-    // Get the total price of selected items
-    int totalPrice = getTotalPrice(); // คำนวณราคาจาก selectedItems
+  // ✅ ฟังก์ชันนำทางไปหน้าชำระเงิน
+  void _navigateToPaymentScreen(BuildContext context) {
+    final listMenu = Provider.of<ListMenu>(context, listen: false);
+    int totalPrice = listMenu.getTotalPrice();
 
-    // Navigate to the payment screen and pass the totalPrice
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PaymentQRCodeScreen(
-            totalAmount: totalPrice.toDouble()), // ส่ง totalPrice
+            totalAmount: totalPrice.toDouble(),
+            selectedItems: listMenu.selectedItems), // ✅ ส่งรายการที่เลือก
       ),
     );
   }

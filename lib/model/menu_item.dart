@@ -5,6 +5,8 @@ class MenuItem {
   final int price;
   final String image;
 
+  static var length;
+
   MenuItem({
     required this.name,
     required this.price,

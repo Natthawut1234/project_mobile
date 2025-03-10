@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart'; // ใช้ Speed Dial
-import 'package:project/pages/cashier_screen.dart';
+import 'package:project/pages/DeleteMenuPage.dart';
+
 import 'package:project/pages/order_history.dart';
-import 'package:project/pages/payment_screen.dart';
-import 'package:project/pages/review_screen.dart';
+
 import '../model/screen/AddMenuScreen.dart';
 import 'menu_screen.dart';
 
@@ -78,22 +78,18 @@ class HomeScreen extends StatelessWidget {
           // ),
           SpeedDialChild(
             child: const Icon(Icons.restaurant_menu, color: Colors.white),
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.green,
             label: "เพิ่มเมนู",
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddMenuScreen(
-                          onAddMenu: (MenuItem) {},
-                        ))),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddMenuScreen())),
           ),
-          SpeedDialChild(
-            child: const Icon(Icons.menu, color: Colors.white),
-            backgroundColor: Colors.orange,
-            label: "เมนู",
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MenuScreen())),
-          ),
+          // SpeedDialChild(
+          //   child: const Icon(Icons.menu, color: Colors.white),
+          //   backgroundColor: Colors.orange,
+          //   label: "เมนู",
+          //   onTap: () => Navigator.push(
+          //       context, MaterialPageRoute(builder: (context) => MenuScreen())),
+          // ),
           // SpeedDialChild(
           //   child: const Icon(Icons.home, color: Colors.white),
           //   backgroundColor: Colors.grey,
@@ -108,6 +104,13 @@ class HomeScreen extends StatelessWidget {
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) => OrderHistoryPage())),
           ),
+          SpeedDialChild(
+            child: const Icon(Icons.delete, color: Colors.white),
+            backgroundColor: Colors.red,
+            label: "ลบเมนู",
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DeleteMenuPage())),
+          )
         ],
       ),
     );
