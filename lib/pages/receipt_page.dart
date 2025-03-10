@@ -11,6 +11,7 @@ import 'package:open_file/open_file.dart';
 import 'package:project/provider/list_menu.dart';
 import 'package:project/provider/order_history_provider.dart';
 import 'package:provider/provider.dart'; // ✅ ใช้เปิดไฟล์ PDF
+import 'package:printing/printing.dart';
 
 class ReceiptScreen extends StatelessWidget {
   final List<MenuItem> selectedItems;
@@ -63,15 +64,41 @@ class ReceiptScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () async {
-                  // String? filePath = await createPDF(
-                  //     selectedItems, totalAmount, receiptId, paymentTime);
-                  // if (filePath != null) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(content: Text('บันทึกใบเสร็จสำเร็จ: $filePath')),
-                  //   );
-                  //   OpenFile.open(filePath); // ✅ เปิดไฟล์ PDF อัตโนมัติ
-                  // }
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Center(child: Text('🧾 ใบเสร็จจาก ว้าดำ Cafe')),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...selectedItems.map((item) => Text(
+                              '${item.name}: ฿${item.price.toStringAsFixed(2)}')),
+                          SizedBox(height: 10),
+                          Text(
+                            'รวมทั้งหมด: ฿${totalAmount.toStringAsFixed(2)}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Divider(),
+                          Text('ขอบคุณที่ใช้บริการ❤️'),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('ตกลง'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // Generate and download PDF
+                            await _generateAndDownloadReceiptPDF(selectedItems,
+                                totalAmount, receiptId, paymentTime, rating);
+                          },
+                          child: Text('ดาวน์โหลดใบเสร็จ'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 child: Text('พิมพ์ใบเสร็จ'),
               ),
@@ -85,7 +112,6 @@ class ReceiptScreen extends StatelessWidget {
                     totalAmount,
                     rating, // ✅ ส่งคะแนนดาวไปด้วย
                     selectedItems,
-
                   );
                   // เคลียร์ตะกร้า
                   Provider.of<ListMenu>(context, listen: false).clearCart();
@@ -112,47 +138,67 @@ double calculateTotal(List<MenuItem> selectedItems) {
 }
 
 // // ✅ ฟังก์ชันสร้าง PDF (ขอ permission และบันทึกไฟล์)
-// Future<String?> createPDF(List<MenuItem> items, double totalAmount,
-//     String receiptId, String paymentTime) async {
-//   final pdf = pw.Document();
+Future<void> _generateAndDownloadReceiptPDF(
+    List<MenuItem> selectedItems,
+    double totalAmount,
+    String receiptId,
+    String paymentTime,
+    double rating) async {
+  final pdf = pw.Document();
 
-//   pdf.addPage(
-//     pw.Page(
-//       build: (pw.Context context) => pw.Column(
-//         crossAxisAlignment: pw.CrossAxisAlignment.start,
-//         children: [
-//           pw.Text("ใบเสร็จ",
-//               style:
-//                   pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-//           pw.SizedBox(height: 10),
-//           pw.Text("ID ใบเสร็จ: $receiptId"),
-//           pw.Text("วันที่และเวลา: $paymentTime"),
-//           pw.SizedBox(height: 10),
-//           pw.Text("รายการสินค้า:",
-//               style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-//           ...items.map((item) =>
-//               pw.Text("${item.name} - ฿${item.price.toStringAsFixed(2)}")),
-//           pw.Divider(),
-//           pw.Text("รวมทั้งหมด: ฿${totalAmount.toStringAsFixed(2)}",
-//               style:
-//                   pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-//         ],
-//       ),
-//     ),
-//   );
+  // Using default fonts in pdf package (Helvetica, Times-Roman, Courier)
+  final ttf = pw.Font.helvetica();
 
-//   // ✅ ขอ permission
-//   if (!(await Permission.storage.request().isGranted)) {
-//     print("Permission denied");
-//     return null;
-//   }
+  // Add receipt content to PDF
+  pdf.addPage(
+    pw.Page(
+      build: (pw.Context context) {
+        return pw.Column(
+          children: [
+            pw.Text('ว้าดำ Cafe',
+                style: pw.TextStyle(
+                    fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf)),
+            pw.Divider(),
+            pw.Text('ID ใบเสร็จ: $receiptId',
+                style: pw.TextStyle(fontSize: 16, font: ttf)),
+            pw.Text('วันที่และเวลา: $paymentTime',
+                style: pw.TextStyle(fontSize: 16, font: ttf)),
+            pw.Divider(),
+            pw.Column(
+              children: selectedItems.map((item) {
+                return pw.Row(
+                  children: [
+                    pw.Text(item.name,
+                        style: pw.TextStyle(fontSize: 18, font: ttf)),
+                    pw.Spacer(),
+                    pw.Text('฿${item.price.toStringAsFixed(2)}',
+                        style: pw.TextStyle(
+                            fontSize: 16,
+                            fontWeight: pw.FontWeight.bold,
+                            font: ttf)),
+                  ],
+                );
+              }).toList(),
+            ),
+            pw.Divider(),
+            pw.Text('คะแนนที่ให้: ⭐ ${rating.toStringAsFixed(1)}',
+                style: pw.TextStyle(
+                    fontSize: 18, color: PdfColors.orange, font: ttf)),
+            pw.SizedBox(height: 5),
+            pw.Text('รวมทั้งหมด: ฿${totalAmount.toStringAsFixed(2)}',
+                style: pw.TextStyle(
+                    fontSize: 20, fontWeight: pw.FontWeight.bold, font: ttf)),
+            pw.Divider(),
+            pw.Text('ขอบคุณที่ใช้บริการ ว้าดำ Cafe ❤️',
+                style: pw.TextStyle(
+                    fontSize: 16, fontStyle: pw.FontStyle.italic, font: ttf)),
+          ],
+        );
+      },
+    ),
+  );
 
-//   final directory = await getApplicationDocumentsDirectory();
-//   final filePath = "${directory.path}/receipt_$receiptId.pdf";
-//   final file = File(filePath);
-
-//   await file.writeAsBytes(await pdf.save());
-
-//   print("PDF บันทึกที่: $filePath");
-//   return filePath; // ✅ ส่ง path กลับไปเพื่อเปิดไฟล์
-// }
+  // Save the PDF and share it
+  final pdfBytes = await pdf.save();
+  await Printing.sharePdf(bytes: pdfBytes, filename: 'receipt.pdf');
+}

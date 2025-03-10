@@ -46,47 +46,75 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue.shade900, Colors.blue.shade300],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // พื้นหลังรูปภาพ
+          Image.asset(
+            "assets/images/background.jpg", // เปลี่ยนเป็น path ของรูปภาพที่คุณต้องการ
+            fit: BoxFit.cover,
           ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              elevation: 8,
-              child: Padding(
+
+          // เลเยอร์สีดำโปร่งแสงเพื่อให้ข้อความเด่นขึ้น
+          Container(
+            color: Colors.black.withOpacity(0.4),
+          ),
+
+          // กล่องล็อกอินแบบโปร่งแสง
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Container(
                 padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2), // สีโปร่งแสง
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                      color: Colors.white.withOpacity(0.5)), // ขอบโปร่งแสง
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.lock, size: 80, color: Colors.blue.shade900),
+                    Icon(Icons.lock_open, size: 80, color: Colors.white),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "เข้าสู่ระบบจัดการคาเฟ่ว้าดำ",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: _emailController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: "อีเมล",
-                        prefixIcon: const Icon(Icons.email),
+                        labelStyle: const TextStyle(color: Colors.white),
+                        prefixIcon:
+                            const Icon(Icons.email, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.1),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
                         ),
                       ),
                     ),
                     const SizedBox(height: 15),
                     TextField(
                       controller: _passwordController,
+                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: "รหัสผ่าน",
-                        prefixIcon: const Icon(Icons.lock),
+                        labelStyle: const TextStyle(color: Colors.white),
+                        prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.1),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.white),
                         ),
                       ),
                       obscureText: true,
@@ -105,9 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         "เข้าสู่ระบบ",
                         style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -115,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
