@@ -12,6 +12,7 @@ import 'package:project/provider/list_menu.dart';
 import 'package:project/provider/order_history_provider.dart';
 import 'package:provider/provider.dart'; // ✅ ใช้เปิดไฟล์ PDF
 import 'package:printing/printing.dart';
+import 'package:flutter/services.dart' show rootBundle; //ใช้โหลดฟอนต์
 
 class ReceiptScreen extends StatelessWidget {
   final List<MenuItem> selectedItems;
@@ -146,52 +147,155 @@ Future<void> _generateAndDownloadReceiptPDF(
     double rating) async {
   final pdf = pw.Document();
 
-  // Using default fonts in pdf package (Helvetica, Times-Roman, Courier)
-  final ttf = pw.Font.helvetica();
+  // ✅ โหลดฟอนต์ภาษาไทย
+  // final fontData =
+  //     await rootBundle.load("assets/fonts/NotoSansThai-Regular.ttf");
+  // final ttf = pw.Font.ttf(fontData);
+  // // Add receipt content to PDF
+  // pdf.addPage(
+  //   pw.Page(
+  //     build: (pw.Context context) {
+  //       return pw.Column(
+  //         children: [
+  //           pw.Text('ว้าดำ Cafe',
+  //               style: pw.TextStyle(
+  //                   fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf)),
+  //           pw.Divider(),
+  //           pw.Text('ID ใบเสร็จ: $receiptId',
+  //               style: pw.TextStyle(fontSize: 16, font: ttf)),
+  //           pw.Text('วันที่และเวลา: $paymentTime',
+  //               style: pw.TextStyle(fontSize: 16, font: ttf)),
+  //           pw.Divider(),
+  //           pw.Column(
+  //             children: selectedItems.map((item) {
+  //               return pw.Row(
+  //                 children: [
+  //                   pw.Text(item.name,
+  //                       style: pw.TextStyle(fontSize: 18, font: ttf)),
+  //                   pw.Spacer(),
+  //                   pw.Text('฿${item.price.toStringAsFixed(2)}',
+  //                       style: pw.TextStyle(
+  //                           fontSize: 16,
+  //                           fontWeight: pw.FontWeight.bold,
+  //                           font: ttf)),
+  //                 ],
+  //               );
+  //             }).toList(),
+  //           ),
+  //           pw.Divider(),
+  //           pw.Text('คะแนนที่ให้: ⭐ ${rating.toStringAsFixed(1)}',
+  //               style: pw.TextStyle(
+  //                   fontSize: 18, color: PdfColors.orange, font: ttf)),
+  //           pw.SizedBox(height: 5),
+  //           pw.Text('รวมทั้งหมด: ฿${totalAmount.toStringAsFixed(2)}',
+  //               style: pw.TextStyle(
+  //                   fontSize: 20, fontWeight: pw.FontWeight.bold, font: ttf)),
+  //           pw.Divider(),
+  //           pw.Text('ขอบคุณที่ใช้บริการ ว้าดำ Cafe ❤️',
+  //               style: pw.TextStyle(
+  //                   fontSize: 16, fontStyle: pw.FontStyle.italic, font: ttf)),
+  //         ],
+  //       );
+  //     },
+  //   ),
+  // );
 
-  // Add receipt content to PDF
+  // ✅ โหลดฟอนต์ภาษาไทย
+  final fontThai =
+      pw.Font.ttf(await rootBundle.load("assets/fonts/THSarabunNew.ttf"));
+
+  // ✅ โหลดฟอนต์อิโมจิ (Noto Emoji)
+  final fontEmoji = pw.Font.ttf(
+      await rootBundle.load("assets/fonts/NotoEmoji-VariableFont_wght.ttf"));
+
   pdf.addPage(
     pw.Page(
       build: (pw.Context context) {
         return pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text('ว้าดำ Cafe',
-                style: pw.TextStyle(
-                    fontSize: 22, fontWeight: pw.FontWeight.bold, font: ttf)),
+            // ส่วนหัวของร้านกาแฟ
+            pw.Center(
+              child: pw.Text('ว้าดำ Cafe',
+                  style: pw.TextStyle(
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
+                      font: fontThai)),
+            ),
             pw.Divider(),
-            pw.Text('ID ใบเสร็จ: $receiptId',
-                style: pw.TextStyle(fontSize: 16, font: ttf)),
-            pw.Text('วันที่และเวลา: $paymentTime',
-                style: pw.TextStyle(fontSize: 16, font: ttf)),
+
+            // ข้อมูลใบเสร็จ
+            pw.Center(
+              child: pw.Text('ID ใบเสร็จ: $receiptId',
+                  style: pw.TextStyle(fontSize: 18, font: fontThai)),
+            ),
+            pw.Center(
+              child: pw.Text('วันที่และเวลา: $paymentTime',
+                  style: pw.TextStyle(fontSize: 18, font: fontThai)),
+            ),
             pw.Divider(),
+
+            // รายการสินค้า
             pw.Column(
               children: selectedItems.map((item) {
                 return pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text(item.name,
-                        style: pw.TextStyle(fontSize: 18, font: ttf)),
-                    pw.Spacer(),
+                        style: pw.TextStyle(fontSize: 18, font: fontThai)),
                     pw.Text('฿${item.price.toStringAsFixed(2)}',
                         style: pw.TextStyle(
-                            fontSize: 16,
+                            fontSize: 18,
                             fontWeight: pw.FontWeight.bold,
-                            font: ttf)),
+                            font: fontThai)),
                   ],
                 );
               }).toList(),
             ),
             pw.Divider(),
-            pw.Text('คะแนนที่ให้: ⭐ ${rating.toStringAsFixed(1)}',
-                style: pw.TextStyle(
-                    fontSize: 18, color: PdfColors.orange, font: ttf)),
-            pw.SizedBox(height: 5),
-            pw.Text('รวมทั้งหมด: ฿${totalAmount.toStringAsFixed(2)}',
-                style: pw.TextStyle(
-                    fontSize: 20, fontWeight: pw.FontWeight.bold, font: ttf)),
+
+            // คะแนนที่ให้ ⭐
+            pw.Center(
+              child: pw.Row(mainAxisSize: pw.MainAxisSize.min, children: [
+                pw.Text('คะแนนที่ให้: ',
+                    style: pw.TextStyle(
+                        fontSize: 18, color: PdfColors.orange, font: fontThai)),
+                pw.Text('⭐',
+                    style: pw.TextStyle(fontSize: 10, font: fontEmoji)),
+                pw.Text(' ${rating.toStringAsFixed(1)}',
+                    style: pw.TextStyle(
+                        fontSize: 18, color: PdfColors.orange, font: fontThai)),
+              ]),
+            ),
+            pw.SizedBox(height: 10),
+
+            // จำนวนเงินรวม
+            pw.Center(
+              child: pw.Text('รวมทั้งหมด: ฿${totalAmount.toStringAsFixed(2)}',
+                  style: pw.TextStyle(
+                      fontSize: 22,
+                      fontWeight: pw.FontWeight.bold,
+                      font: fontThai)),
+            ),
             pw.Divider(),
-            pw.Text('ขอบคุณที่ใช้บริการ ว้าดำ Cafe ❤️',
-                style: pw.TextStyle(
-                    fontSize: 16, fontStyle: pw.FontStyle.italic, font: ttf)),
+
+            // ข้อความขอบคุณ
+            pw.Center(
+              child: pw.Row(
+                mainAxisSize: pw.MainAxisSize.min,
+                children: [
+                  pw.Text('🙏',
+                      style: pw.TextStyle(fontSize: 18, font: fontEmoji)),
+                  pw.Text('ขอบคุณที่ใช้บริการ ว้าดำ Cafe',
+                      style: pw.TextStyle(
+                          fontSize: 18,
+                          fontStyle: pw.FontStyle.italic,
+                          font: fontThai)),
+                  pw.Text('❤️',
+                      style: pw.TextStyle(fontSize: 18, font: fontEmoji)),
+                ],
+              ),
+            ),
           ],
         );
       },
