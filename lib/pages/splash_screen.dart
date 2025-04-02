@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:lottie/lottie.dart';
+
 class SplashScreen extends StatefulWidget {
   final Widget nextScreen;
   const SplashScreen({super.key, required this.nextScreen});
@@ -24,14 +26,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[300],
-      body: const Center(
-        child: Text(
-          'Cafe ว้าดำ',
-          style: TextStyle(
-              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-      ),
-    );
+        backgroundColor: Colors.brown[300],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Lottie.asset('assets/lottie/animetion.json', height: 400),
+              const SizedBox(height: 20),
+              const Text('BlackWa Cafe POS System',
+                  style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const CircularProgressIndicator(),
+            ],
+          ),
+        ));
   }
 }

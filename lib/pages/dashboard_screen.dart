@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:project/provider/order_history_provider.dart';
 
@@ -14,6 +15,18 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard การขายวันนี้'),
         backgroundColor: Colors.green,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              // settings_provider.dart
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
